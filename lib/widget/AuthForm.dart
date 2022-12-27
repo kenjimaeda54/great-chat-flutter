@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:great_chat/utils/AuthFormData.dart';
 
 class AuthForm extends StatefulWidget {
-  const AuthForm({Key? key}) : super(key: key);
+  void Function(AuthFormData form) handleSumbit;
+  AuthForm(this.handleSumbit, {Key? key}) : super(key: key);
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -24,6 +25,7 @@ class _AuthFormState extends State<AuthForm> {
     void handleSubmit() {
       final validate = formSubmit.currentState?.validate() ?? false;
       if (!validate) return;
+      widget.handleSumbit(form);
     }
 
     String? handleNameValidate(String? text) {
@@ -84,6 +86,7 @@ class _AuthFormState extends State<AuthForm> {
                 ),
               TextFormField(
                 key: const Key("email"),
+                keyboardType: TextInputType.emailAddress,
                 validator: (email) => handleValidateEmail(email),
                 decoration: const InputDecoration(
                   label: Text("E-mail"),

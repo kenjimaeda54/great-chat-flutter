@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:great_chat/screen/AuthScreen.dart';
 import 'package:great_chat/screen/LoadingScreen.dart';
+import 'package:great_chat/screen/MiddlewareRoute.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AuthScreen(),
+      home: const MiddlewareRoute(),
     );
   }
 }

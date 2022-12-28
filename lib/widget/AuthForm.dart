@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:great_chat/utils/AuthFormData.dart';
+import 'package:great_chat/widget/UserImagePicker.dart';
+import '../models/AuthFormData.dart';
 
 class AuthForm extends StatefulWidget {
   void Function(AuthFormData form) handleSumbit;
@@ -22,9 +25,15 @@ class _AuthFormState extends State<AuthForm> {
       });
     }
 
+    void handleSelectedImage(File? file) {
+      form.image = file;
+    }
+
     void handleSubmit() {
       final validate = formSubmit.currentState?.validate() ?? false;
+
       if (!validate) return;
+      if (form.isSignUp && form.image == null) return;
       widget.handleSumbit(form);
     }
 
@@ -70,6 +79,7 @@ class _AuthFormState extends State<AuthForm> {
           ),
           child: Column(
             children: [
+              if (form.isSignUp) UserImagePicker(handleSelectedImage),
               if (form.isSignUp)
                 TextFormField(
                   initialValue: form.name,
@@ -88,6 +98,11 @@ class _AuthFormState extends State<AuthForm> {
                 key: const Key("email"),
                 keyboardType: TextInputType.emailAddress,
                 validator: (email) => handleValidateEmail(email),
+                onChanged: (email) {
+                  setState(() {
+                    form.email = email;
+                  });
+                },
                 decoration: const InputDecoration(
                   label: Text("E-mail"),
                 ),
@@ -96,6 +111,11 @@ class _AuthFormState extends State<AuthForm> {
                 key: const Key("password"),
                 validator: (password) => handlePassWord(password),
                 obscureText: true,
+                onChanged: (password) {
+                  setState(() {
+                    form.password = password;
+                  });
+                },
                 decoration: const InputDecoration(
                   label: Text("Senha"),
                 ),

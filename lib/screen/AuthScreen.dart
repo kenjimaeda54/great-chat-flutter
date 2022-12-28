@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:great_chat/utils/AuthFormData.dart';
+import 'package:great_chat/models/MockUserService.dart';
 import 'package:great_chat/widget/AuthForm.dart';
+
+import '../models/AuthFormData.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -13,9 +15,25 @@ class _AuthScreenState extends State<AuthScreen> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    void handleForm(AuthFormData form) {
-      setState(() => isLoading = true);
-      print(form.email);
+    Future<void> handleForm(AuthFormData form) async {
+      try {
+        setState(() => isLoading = true);
+
+        if (form.isSignUp) {
+          await MockUserService().singUp(
+              name: form.name,
+              email: form.email,
+              password: form.password,
+              img: form.image);
+        } else {
+          await MockUserService()
+              .logIn(email: form.email, password: form.password);
+        }
+      } catch (error) {
+        print(error);
+      } finally {
+        setState(() => isLoading = false);
+      }
     }
 
     return Scaffold(
